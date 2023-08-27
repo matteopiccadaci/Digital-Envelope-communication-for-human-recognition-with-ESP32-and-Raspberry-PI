@@ -38,18 +38,13 @@
 #define LED_PIN 48 
 #define LED_TYPE NEO_GRB 
 
-/*
-const char *SSID = "iPhone di Matteo Piccadaci";
-const char *PWD = "CiaoMatteo";
-const char* url = "http://172.20.10.7:8000/";
-*/
 
-const char *SSID = "Wind3 HUB - FC6A79";
-const char *PWD = "7satetyyue34y9xa";
-const char* url = "http://192.168.1.5:8000/";
+const char *SSID = "********";
+const char *PWD = "**********";
+const char* url = "http://***.***.***.***:****/";
 int lastState = HIGH;
 int currentState;     
-WebServer server(80); //Inizializzazione del web server  
+WebServer server(80); 
 
 Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, LED_TYPE);
 StaticJsonDocument<500> jsonDocument;
@@ -115,20 +110,13 @@ int cameraSetup(void) {
 
 
 void sendPhoto() {
-  /* 
-  È la prima routine che la scheda segue: al momento dell'attivazione (dunque alla pressione di un pulsante o 
-  al passare di un determinato lasso di tempo), si inizializza il documento JSON che successivamente verrà popolato.
-  Viene dunque generata casualmente la chiave simmetrica per poi effettuare la cifratura AES. A questo punto si cifra la chiave appena generata 
-  con la chiave pubblica del server traimite l'algoritmo RSA e si codifica in base64. Adesso si scatta l'immagine e la si cifra tramite AES, impostando
-  come chiave quella precentemente generata. Una volta terminato, l'output viene codificato in base64. Viene effettuato un controllo sulla lunghezza della
-  codifica, come spiegato sotto. Una volta terminato il controllo, si prepara la stringa JSON e viene dunque inviata al Server.
-  */
+  
     DynamicJsonDocument doc(20000);
     size_t fblen;
     Serial.printf("Ready to shoot\n");
     char random_key[32];
     getRandomStr(random_key, 32);
-    char *public_key_hc="-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEArrFm6zDyYDd16BwixjbkLZjpoWi2Juwkoc1cQcfneDbgTMcPZ3Ay\nxCeLL324u0Hs3dG6wSQGRA989ar/tp13HjP1ARlKvYqrvEDwsEuWFUZDvqEhfd5F\n/z5WvDqlq01FLC6LwpimtJn5ciuXs01g1aLuzg/09vlFBhel5odl8KOJAzjCZlhf\njn8ngt22iuMX/e2ZhVH4tvx3bL7XGLQmu/djGoaq5lcxhanrPlEpYRldSejFurI+\naEr/XmXaJwU/eGukxwMc9MAb/QEQ3RFbethGy5VBgZPIQ+YDlq60BHUUzXm13ArW\n9oxeSWbUMzzFtxKIV2jSyOpFA82Zh9AH4QIDAQAB\n-----END RSA PUBLIC KEY-----\n";
+    char *public_key_hc="-----BEGIN RSA PUBLIC KEY-----\n**********-----END RSA PUBLIC KEY-----\n";
     unsigned char encrypted_key[MBEDTLS_MPI_MAX_SIZE];
     size_t encrypted_len = 0;
     size_t encrypted_len_iv=0;
@@ -139,7 +127,7 @@ void sendPhoto() {
     mbedtls_pk_init(&pk);
     mbedtls_ctr_drbg_init(&ctr_drbg);
     mbedtls_entropy_init(&entropy);
-    // Sia ctr_;drbg che entropy sono necessarie per il funzionamento dell'RSA
+
   
     if ((ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *)random_key, strlen(random_key))) != 0) {
         printf("mbedtls_ctr_drbg_seed returned %d\n", ret);
@@ -159,7 +147,7 @@ void sendPhoto() {
 
 
     String encrypted_key64= base64::encode(encrypted_key, encrypted_len);
-    // codifico in B64 per inviare chiave criptata in JSON
+   
     mbedtls_pk_free(&pk);
     delay(1000);
       
@@ -190,7 +178,7 @@ void sendPhoto() {
     String img64= base64::encode((uint8_t *) encrypted_data, fblen + padding_bytes);
     free(padded_data);
     free(fb->buf);
-    //String img64= base64::encode((uint8_t *) encrypted_data, fblen + padding_bytes);
+   
 
     mbedtls_aes_free(&aes);
     
@@ -198,11 +186,6 @@ void sendPhoto() {
       Serial.println("Errore nella codifica dell'immagine, riavvio\n");
       ESP.restart();
     }
-  
-    /*È stato notato che quando la foto è sbagliata (prende ad esempio mezza faccia o l'obiettivo è coperto quindi la foto viene nera)
-    la lunghezza della codifica in B64 è molto minore (Quando viene correttamente varia tra gli 11k e i 15k),
-    quindi si è scelta 9000 come soglia minima per la quale la foto è giudicata accettabile*/
-
 
     String json_string="res="+img64+"&key="+encrypted_key64;
    
@@ -220,14 +203,7 @@ void sendPhoto() {
     }
 
 void receiveFeedback(){
-  /* 
-  Una volta che il server ha terminato le sue operazioni, verrà ricevuto un pacchetto JSON contenente
-  la chiave AES criptata tramite la chiave pubblica della scheda e la stringa cifrata in AES tramite la chiave pubblica
-  precedentemente menzionata, entrambe codificate in base64.
-  Vengono dunque decodificati entrambi e, successivamente, si inizializza dunque l'ambiente di decifratura RSA con la chiave privata della scheda.
-  Adesso verrà decifrata la chiave AES ed, infine, viene decifrata la stringa. Se essa corrisponderà a quella prevista, si accenderà il LED verde, altrimenti 
-  lampeggierà il LED rosso.
-  */
+
   String body = server.arg("plain");
   deserializeJson(jsonDocument, body);
   String input=jsonDocument["flag"];
@@ -284,7 +260,7 @@ void receiveFeedback(){
         printf(" failed\n  ! mbedtls_pk_parse_key returned -0x%04x\n", -ret);
         char errorBuf[100];
         mbedtls_strerror(ret, errorBuf, sizeof(errorBuf));
-        Serial.printf("Errore durante la decrittazione: %s\n", errorBuf);
+        Serial.printf("Error during decryption: %s\n", errorBuf);
   
     }
   unsigned char resultKey[MBEDTLS_MPI_MAX_SIZE];
@@ -322,8 +298,8 @@ void receiveFeedback(){
   if ((strcmp(char_array, cmp))==0)
   {
   Serial.println("Recognized");
-  strip.setPixelColor(0, 0, 255, 0); // Imposta il colore del primo LED a verde
-  strip.show(); // Applica il cambio di colore ai LED
+  strip.setPixelColor(0, 0, 255, 0); 
+  strip.show();
   delay(2000);
 
   }
@@ -341,15 +317,14 @@ void receiveFeedback(){
   delay (500);
   strip.setPixelColor(0, 0, 0, 0);
   strip.show();
-  //Quando l'utente non viene riconosciuto, il Led verde rimane spento mentre quello rosso lampeggia
+  
   delay(1000);
   }
   server.send(200); 
   resultString.clear();
   ESP.restart();
 
-  // A prescindere dal fatto che l'utente venga riconosciuto o meno, al server si invia ok per poter chiudere lo scambio
-}
+  
 
 void setup() {
   Serial.flush();
@@ -377,7 +352,7 @@ void loop() {
   server.handleClient();
   }
   lastState = currentState;}*/
-  strip.setPixelColor(0, 255, 255, 255); // Imposta il colore del primo LED a bianco
+  strip.setPixelColor(0, 255, 255, 255); 
   strip.show();
   sendPhoto();
   server.handleClient();
