@@ -241,28 +241,16 @@ void receiveFeedback(){
   strncpy(keyCh, key.c_str(), key.length());
   keyCh[key.length()] = '\0';
 
-  /*
-  Alcuni lavori per rendere utilizzabili le stringhe ricevute dal Server
-  */
 
-  String priv_key_esp1="-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA0olstSyHl9Iv1R0NEWL2oUXPhh3pzgS+QlxX0/kwpGJOnEWN\n";
-  String priv_key_esp2="fDKz43DkMJwiy3VM+LLF17G01sP2xz5ZGHySg/MN1qb63iDd06B2udlSMYIqZo8V\netVaQX11BqgnmBAEqppAsup1NX03JpvKLq+G+O5RpRbxVhYAi/6VKL+HV+1yjUxL\n";
-  String priv_key_esp3="Sxn476v8PINR8iMsvnjd0dLqKxAndhUtolMslkvMAOqTYsPdlEidonVb6YXdXt2/\nWqm+Byel84IKx4WBqw4+BO/1zFNhkDTLD0O/IhgBTdBU1fXEbTt0yLkJVoTB4Yzs\njhHLV8m+xyWp+t9wuFOY8i/vILj3F3VrRtC70QIDAQABAoIBAQCJv45Xj5X7uHLB\nTeuh540UAXgA+QtjVukgxAhW0WCI/SUPy9YBX68g7VjvkQiW891zjowxTrzSE48f\n";
-  String priv_key_esp4="12Q1yDOYj2sLeV8D/J8GeqOTf2PuroqNZaqZHoSZ+rqZq2WUcU6MTLZuGUasw4tV\nAHMtTnzR3COhDzzBpU2gSuZOrdmgpbP6uBBTTsz3gsdzJpEHKpUqsiX/672uaFPi\n6ME53gPSH3UvjvYwdGSqvBx8xnBnbdUjn1sg4iRfu8UKcww84zK+6TQX+QBe0NwQ\nhT43zxBRA79iSCWlFuMyPB3M2CDzEadcxWPpFRDQ1CGH8xVmpUAN+yRRpSTbAznr\n";
-  String priv_key_esp5="jj6xplPBAoGBAO5JbhkZmm6YzJyCyfC63VjtthWxeuiIS+KGbvYZvE8hmWtWGoQx\ndwQjKqj98orb+yrzyY8/gSkx2L5n4GuTfdgaUKxGlk87xGAt5YNSzpeKBltdfBiK\np//mQv4EHd3p2vfnUwxkJlaJ2/371cc2qRniwgvjFNm8xfPa2LXEwiLJAoGBAOIv\n6jzlVyfdEXiJ1huS937Ha+RY9KIg0sNtXiec8MqZ0YE9tG+zJoZ+8g4F4whf1z6d\n";
-  String priv_key_esp6="p/vgZz52OXwDZREusiPiTpBPRDWT+/Oypmf8ww3ir2qqY9GDnksRI5rjcvYB0kJM\n05UmdQY2H10yhdG9paOcXC5JtRcSt4+X9OH5sgzJAoGAQtikozP0h8wjslBaeEbj\nq3vcFc/ZK/x4VU7jN/TWR9ikImFgRO9fdPCsmgXLkbrOhiknxSDKihTqudeINIWG\nyyXutbWDmyyoFVcqyKFlRUu6Js1d78COCpK8/meHPWbKP7tMJ/C8dJBt/50zRpSF\n";
-  String priv_key_esp7="8bYUO6NziPWVDqi5HJza3UkCgYA+VI3sMhcOeTEzUmiaOKnTWgk1Z/4iH4F1MVJd\nADaq3jCJuQNcNLZNIfZ6Ps0NpbufGbsNAg3xfIrizdywG3ojwV19Dxrw2NL5mSWa\nSmFGFk3YyxOuzOJ2NUbmi/9GI8JZWuqDk5F0IL4L5LxTzDs1FwWgC9fHf/TtsSZe\nj3ytYQKBgQDPDz/kgB4jsNKJis3vU1xXQE6ufBCBOIqPtIQ1wAKhRB12qHA7sJG3\n";
-  String priv_key_esp8="JKH6iWK3taU4dGKE5lt6oDHRXf0TxHN9YuezHiU9iTRmklo1mFZZ2nfLWkZyv3Kh\n9JWTRT1fgAHgHZMqOA63vZ0ynMzIVOIfMo7dqxeVRN8IOOUZGWjhyA==\n-----END RSA PRIVATE KEY-----\n";
-  String priv_key_espS=priv_key_esp1+priv_key_esp2+priv_key_esp3+priv_key_esp4+priv_key_esp5+priv_key_esp6+priv_key_esp7+priv_key_esp8;
-  char* priv_key_esp=&priv_key_espS[0];
-  /*priv_key_esp1.clear();
-  priv_key_esp2.clear();
-  priv_key_esp3.clear();
-  priv_key_esp4.clear();
-  priv_key_esp5.clear();
-  priv_key_espS.clear();
-  */
-  // Decifrazione
+ String priv_key_esp1="-----BEGIN RSA PRIVATE KEY-----\n***********\n";
+  String priv_key_esp2="*********************************\n";
+  String priv_key_esp3="";
+  String priv_key_esp4="";
+  String priv_key_esp5="";
+  String priv_key_esp6="";
+  String priv_key_esp7="";
+  String priv_key_esp8="*********-----END RSA PRIVATE KEY-----\n";
+
   unsigned char encryptedRSA[256];
   size_t outlen;
   int ret = 0;
