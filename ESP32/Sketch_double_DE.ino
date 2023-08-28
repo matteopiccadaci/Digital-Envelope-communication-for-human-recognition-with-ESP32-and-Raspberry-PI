@@ -41,7 +41,7 @@ const char* url = "http://***.***.***.***:8000/";
 int lastState = HIGH; 
 int currentState;
 
-// Those two are the state of the button
+// These two are the state of the button
 
 WebServer server(80);  
 
