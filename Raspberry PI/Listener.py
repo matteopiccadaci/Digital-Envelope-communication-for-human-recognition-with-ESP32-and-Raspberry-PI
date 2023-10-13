@@ -45,9 +45,6 @@ def index():
             GPIO.output(red_led, GPIO.HIGH)
             time.sleep(0.5)
             GPIO.output(red_led, GPIO.LOW)
-        with open ("time.txt", "r") as pipe:
-             inizio=pipe.read()
-        print ((time.time())-inizio)
         return "OK"
 
 if __name__ == '__main__':
