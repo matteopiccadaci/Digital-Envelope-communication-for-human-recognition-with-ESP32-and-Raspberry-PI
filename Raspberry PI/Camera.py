@@ -46,13 +46,10 @@ cbar.set_label('Temperature [$^{\circ}$C]',fontsize=14)
 url='http://***.***.***.***:****/'
 
 def take_photo():
-    #my_stream = io.BytesIO() # si usa uno stream per evitare di salvare l'immagine su disco
     result, image = camera.read()
     sleep(0.5)
     if result:
         cv2.imwrite("temp.jpg", image)
-    #my_stream.seek(0)
-#return my_stream.read()
     return 1
 
 def evaluate_thermal_image():
@@ -83,11 +80,11 @@ def get_random_string(length):
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
 
-with open ('pubKeyServer.pem', 'rb') as f:
+with open ('******.pem', 'rb') as f:
         pubKeyServer=f.read()
 pubKeyServer=rsa.PublicKey.load_pkcs1_openssl_pem(pubKeyServer)
 
-print("Caricamento completato")
+print("Ready")
 while True:
     try:
         random_key=get_random_string(32)
