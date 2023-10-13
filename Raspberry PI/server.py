@@ -23,12 +23,12 @@ import json
 parser = argparse.ArgumentParser()
 parser.add_argument("-hs","--hotspot", help="SSID name")
 args = parser.parse_args()
-with open ('privKeyServer.pem', 'rb') as f:
+with open ('*******.pem', 'rb') as f:
         privKeyServer=f.read()
 privKeyServer=rsa.PrivateKey.load_pkcs1(privKeyServer)
-with open ("pubKeyESP.pem", "rb") as f:
-        pubKeyESP=f.read()
-pubKeyESP=rsa.PublicKey.load_pkcs1_openssl_pem(pubKeyESP)
+with open ("*******.pem", "rb") as f:
+        pubKeyRasp=f.read()
+pubKeyRasp=rsa.PublicKey.load_pkcs1_openssl_pem(pubKeyRasp)
 
 
 def getRandomStr(length):
@@ -72,7 +72,7 @@ def index():
                         newkey=getRandomStr(16)
                         cipher=AES.new(bytes(newkey, 'utf-8'), AES.MODE_ECB)
                         flag=cipher.encrypt(b'alsoeyatdfguinbg')
-                        newkey=rsa.encrypt(bytes(newkey, 'utf-8'), pubKeyESP)
+                        newkey=rsa.encrypt(bytes(newkey, 'utf-8'), pubKeyRasp)
                         newkey=base64.b64encode(newkey).decode('utf-8')
                         flag=base64.b64encode(flag).decode('utf-8')
                         send = {'flag' : flag, 'key' : newkey}
@@ -86,7 +86,7 @@ def index():
                 newkey=getRandomStr(16)
                 cipher=AES.new(bytes(newkey, 'utf-8'), AES.MODE_ECB)
                 flag=cipher.encrypt(b'aaaaaaaaaaaaaaaa')
-                newkey=rsa.encrypt(bytes(newkey, 'utf-8'), pubKeyESP)
+                newkey=rsa.encrypt(bytes(newkey, 'utf-8'), pubKeyRasp)
                 newkey=base64.b64encode(newkey).decode('utf-8')
                 flag=base64.b64encode(flag).decode('utf-8')
                 send = {'flag' : flag, 'key' : newkey}
